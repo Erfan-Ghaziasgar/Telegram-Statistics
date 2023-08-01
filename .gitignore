@@ -170,3 +170,6 @@ cython_debug/
 # PNG and JPEG images
 *.png
 *.jpg
+
+# font files
+*.ttf
