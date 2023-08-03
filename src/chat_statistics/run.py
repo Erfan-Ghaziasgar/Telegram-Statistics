@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 import streamlit as st
 from PIL import Image
 
-from chat_statistics.stats import ChatStatistics
+from src.chat_statistics.stats import ChatStatistics
+from collections import Counter
 
 st.title("Chat Statistics")
 st.write("This is a dashboard to visualize your chat statistics.")
@@ -24,6 +25,11 @@ if uploaded_file is not None:
 
     # Display the figure in streamlit
     st.pyplot(fig)
+
+    # write words in wordcloud image to streamlit. Doesn't include stop words.
+    st.write("Words in wordcloud:")
+    st.write(chat_statistics.wordcloud.words_)
+
 
     # Save wordcloud to file (with appropriate extension)
     wordcloud_image_path = Path.cwd() / f"{Path(uploaded_file.name).stem}.png"

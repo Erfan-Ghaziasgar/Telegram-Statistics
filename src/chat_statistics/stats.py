@@ -1,12 +1,9 @@
-import json
-from pathlib import Path
-from typing import Union
-
-import matplotlib.pyplot as plt
 from hazm import *
 from wordcloud import WordCloud
 
 from src.Data import DATA_DIR
+
+from pathlib import Path
 
 
 class ChatStatistics:
@@ -49,7 +46,7 @@ class ChatStatistics:
     def generate_wordcloud(
         self,
         background_color="white",
-        font_path=str(DATA_DIR / "NotoNaskhArabic-Regular.ttf"),
+        font_path=str(Path(DATA_DIR / "NotoNaskhArabic-Regular.ttf")),
     ):
         wordcloud = WordCloud(
             width=800,
