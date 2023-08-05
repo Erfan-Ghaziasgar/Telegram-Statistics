@@ -18,7 +18,7 @@ class ChatStatistics:
     def stop_words(self):
         with open(DATA_DIR / "persian.txt") as f:
             stop = f.read().split("\n")
-            return stop
+            return set(stop)
 
     def words(self):
         content = ""
@@ -46,7 +46,8 @@ class ChatStatistics:
     def generate_wordcloud(
         self,
         background_color="white",
-        font_path=str(Path(DATA_DIR / "NotoNaskhArabic-Regular.ttf")),
+        # font_path=str(Path(DATA_DIR / "NotoNaskhArabic-Regular.ttf")),
+        font_path="~/usr/share/fonts/truetype/Times_New_Roman.ttf",
     ):
         wordcloud = WordCloud(
             width=800,

@@ -27,8 +27,9 @@ if uploaded_file is not None:
     st.pyplot(fig)
 
     # write words in wordcloud image to streamlit. Doesn't include stop words.
-    st.write("Words in wordcloud:")
-    st.write(chat_statistics.wordcloud.words_)
+    if st.checkbox("Show words in wordcloud"):    
+        st.write("Words in wordcloud:")
+        st.write(chat_statistics.wordcloud.words_)
 
 
     # Save wordcloud to file (with appropriate extension)
