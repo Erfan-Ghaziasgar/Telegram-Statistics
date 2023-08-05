@@ -12,9 +12,10 @@ from collections import Counter
 st.title("Chat Statistics")
 st.write("This is a dashboard to visualize your chat statistics.")
 
+# Create a file uploader
 uploaded_file = st.file_uploader("Choose a JSON file", type="json")
 
-
+# If a file is uploaded, create a ChatStatistics object and generate a wordcloud
 if uploaded_file is not None:
     data = json.loads(uploaded_file.getvalue().decode())
     chat_statistics = ChatStatistics(data)
