@@ -27,10 +27,10 @@ if uploaded_file is not None:
     # Display the figure in streamlit
     st.pyplot(fig)
 
-    # write words in wordcloud image to streamlit. Doesn't include stop words.
-    if st.checkbox("Show words in wordcloud"):    
+    # write 100 most common words that are not stop words
+    if st.checkbox("Show words in wordcloud"):
         st.write("Words in wordcloud:")
-        st.write(chat_statistics.wordcloud.words_)
+        st.write(list(filter(lambda x: x[0] not in chat_statistics.stop, Counter(chat_statistics.content).most_common(300))))[:100]
 
 
     # Save wordcloud to file (with appropriate extension)
