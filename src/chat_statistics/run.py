@@ -30,8 +30,8 @@ if uploaded_file is not None:
     # write 100 most common words that are not stop words
     if st.checkbox("Show words in wordcloud"):
         st.write("Words in wordcloud:")
-        st.write(list(filter(lambda x: x[0] not in chat_statistics.stop, Counter(chat_statistics.content).most_common(300))))[:100]
-
+        st.write(list(filter(lambda x: x[0] not in chat_statistics.stop, Counter(
+            chat_statistics.content).most_common(300))))[:100]
 
     # Save wordcloud to file (with appropriate extension)
     wordcloud_image_path = Path.cwd() / f"{Path(uploaded_file.name).stem}.png"
@@ -46,5 +46,9 @@ if uploaded_file is not None:
         file_name=f"{Path(uploaded_file.name).stem}_wordcloud.png",
         mime="image/png",
     )
+    # Show Users with their number of replies
+    for user, value in chat_statistics.users_with_reply().items():
+        st.write(f"{user}: {len(value)}")
+
 else:
     st.write("Please upload a JSON file.")

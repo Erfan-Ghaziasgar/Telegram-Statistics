@@ -22,6 +22,7 @@ class ChatStatistics:
             ]
     }
     '''
+
     def __init__(self, data: str):
         '''
         :param data: JSON object in the format of the JSON file exported from Telegram.
@@ -59,7 +60,6 @@ class ChatStatistics:
                             content.extend(sub_msg["text"].split())
 
         return " ".join(content)
-
 
     def content_normalize(self, content):
         '''
@@ -101,3 +101,74 @@ class ChatStatistics:
         ).generate(" ".join(self.content))
         return wordcloud
 
+    def sentence_tokenize(self, massage):
+        '''
+        :param massage: A massage from self.data["messages"].
+        :return: A list of sentences in the massage.
+        '''
+        sentences_message = []
+        if isinstance(massage["text"], str):
+            sentences_message.extend(sent_tokenize(massage["text"]))
+        elif isinstance(massage["text"], list):
+            for sub_msg in massage["text"]:
+                if isinstance(sub_msg, str):
+                    sentences_message.extend(sent_tokenize(sub_msg))
+                elif isinstance(sub_msg, dict):
+                    if "text" in sub_msg:
+                        sentences_message.extend(
+                            sent_tokenize(sub_msg["text"]))
+        return sentences_message
+
+    def users(self):
+        '''
+        :return: A dictionary of users with their count messages.
+        '''
+        users = {}
+        for msg in self.data["messages"]:
+            if not msg["from"] in users:
+                users[msg["from"]] = 0
+            users[msg["from"]] += 1
+        return users
+
+    def users_with_question(self):
+        '''
+        :return: A dictionary of users with their count messages including questions mark.
+        '''
+        users = {}
+        for msg in self.data["messages"]:
+            sentences = self.sentence_tokenize(msg)
+            for sentence in sentences:
+                if '؟' in sentence or '?' in sentence:
+                    users[msg["from"]] = users.get(msg["from"], 0) + 1
+                    break
+        return users
+
+    def users_with_reply(self):
+        '''
+        :return: A dictionary of users with their count messages including replying.
+        '''
+        users = {}
+        for msg in self.data["messages"]:
+            if not "reply_to_message_id" in msg:
+                continue
+            if not msg["from"] in users.keys():
+                users[msg["from"]] = []
+            users[msg["from"]].append(msg["reply_to_message_id"])
+        return users
+
+    def users_with_reply_to_questions(self):
+        '''
+        :return: A dictionary of users with their count messages including replying to questions.
+        '''
+        users = {}
+        users_with_reply = self.users_with_reply()
+        for user in users_with_reply:
+            for msg_id in users_with_reply[user]:
+                for msg in self.data["messages"]:
+                    if msg_id == msg["id"]:
+                        sentences = self.sentence_tokenize(msg)
+                        for sentence in sentences:
+                            if ('?' or '؟') in sentence:
+                                users[user] = users.get(user, 0) + 1
+                                break
+        return users
