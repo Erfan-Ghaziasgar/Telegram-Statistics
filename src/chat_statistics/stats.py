@@ -46,16 +46,20 @@ class ChatStatistics:
         '''
         :return: A string of all the words in the chat.
         '''
-        content = ""
+        content = []
         for msg in self.data["messages"]:
-            if type(msg["text"]) == str:
-                content += msg["text"] + " "
-            elif type(msg["text"]) == list:
+            if isinstance(msg["text"], str):
+                content.extend(msg["text"].split())
+            elif isinstance(msg["text"], list):
                 for sub_msg in msg["text"]:
-                    if type(sub_msg) == str:
-                        content += sub_msg + " "
+                    if isinstance(sub_msg, str):
+                        content.extend(sub_msg.split())
+                    elif isinstance(sub_msg, dict):
+                        if "text" in sub_msg:
+                            content.extend(sub_msg["text"].split())
 
-        return content
+        return " ".join(content)
+
 
     def content_normalize(self, content):
         '''
@@ -96,3 +100,4 @@ class ChatStatistics:
             font_path=font_path,
         ).generate(" ".join(self.content))
         return wordcloud
+
